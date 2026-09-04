@@ -118,6 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const cartDrawerItemCount = document.getElementById('cartDrawerItemCount');
       if (cartDrawerItemCount) {
         cartDrawerItemCount.textContent = `${totalCount} item${totalCount !== 1 ? 's' : ''}`;
+        cartDrawerItemCount.style.display = totalCount > 0 ? 'inline-block' : 'none';
       }
 
       // Subtotal & Total in drawer footer
@@ -126,11 +127,13 @@ document.addEventListener('DOMContentLoaded', () => {
       if (cartSubtotal) cartSubtotal.textContent = `₹${totalPrice}`;
       if (cartTotal) cartTotal.textContent = `₹${totalPrice}`;
 
-      // Render cart drawer body items
+      const cartDrawerFooter = document.getElementById('cartDrawerFooter');
       const cartDrawerBody = document.getElementById('cartDrawerBody');
+
       if (cartDrawerBody) {
         const cart = this.getCart();
         if (cart.length === 0) {
+          if (cartDrawerFooter) cartDrawerFooter.style.display = 'none';
           cartDrawerBody.innerHTML = `
             <div class="cart-empty-state">
               <svg class="cart-empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -140,9 +143,17 @@ document.addEventListener('DOMContentLoaded', () => {
               </svg>
               <h4 class="cart-empty-title">Your cart is empty</h4>
               <p>Explore our plant catalog and add your favorite plants to order!</p>
+              <a href="catalog.html" class="btn-browse-plants" id="cartBrowseBtn">Browse Plants</a>
             </div>
           `;
+          const cartBrowseBtn = document.getElementById('cartBrowseBtn');
+          if (cartBrowseBtn) {
+            cartBrowseBtn.addEventListener('click', () => {
+              closeCartDrawer();
+            });
+          }
         } else {
+          if (cartDrawerFooter) cartDrawerFooter.style.display = 'flex';
           cartDrawerBody.innerHTML = cart.map(item => `
             <div class="cart-item-row" data-id="${item.id}">
               <div class="cart-item-img-box">
@@ -150,7 +161,6 @@ document.addEventListener('DOMContentLoaded', () => {
               </div>
               <div class="cart-item-details">
                 <strong class="cart-item-name">${item.name}</strong>
-                <span class="cart-item-price">₹${item.price} × ${item.quantity} = ₹${item.price * item.quantity}</span>
                 <div class="cart-qty-controls">
                   <button class="cart-qty-btn btn-qty-minus" data-id="${item.id}">-</button>
                   <span class="cart-qty-val">${item.quantity}</span>

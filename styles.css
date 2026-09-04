@@ -2796,15 +2796,17 @@ button, input {
   }
 
   .category-pills-wrap {
-    justify-content: flex-start;
-    overflow-x: auto;
-    flex-wrap: nowrap;
-    padding-bottom: 0.5rem;
-    scrollbar-width: none;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem 0.6rem;
+    overflow-x: visible;
+    padding-bottom: 0;
   }
 
-  .category-pills-wrap::-webkit-scrollbar {
-    display: none;
+  .category-pill-btn {
+    padding: 0.5rem 0.95rem;
+    font-size: 0.82rem;
   }
 }
 
@@ -2942,6 +2944,28 @@ button, input {
   font-size: 1.2rem;
   color: #111827;
   font-weight: 600;
+}
+
+.btn-browse-plants {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.75rem;
+  background-color: #0F382C;
+  color: #FFFFFF !important;
+  font-family: var(--font-display);
+  font-size: 0.92rem;
+  font-weight: 700;
+  border-radius: 9999px;
+  text-decoration: none;
+  margin-top: 0.5rem;
+  box-shadow: 0 4px 14px rgba(15, 56, 44, 0.2);
+  transition: all 0.2s ease;
+}
+
+.btn-browse-plants:hover {
+  background-color: #1B4332;
+  transform: translateY(-2px);
 }
 
 /* Cart Item Row */
@@ -5310,6 +5334,23 @@ html, body {
   html, body {
     overflow-x: hidden !important;
     width: 100% !important;
+  }
+
+  .cart-drawer {
+    top: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    left: auto !important;
+    width: 88% !important;
+    max-width: 360px !important;
+    height: 100% !important;
+    height: 100dvh !important;
+    transform: translateX(100%) !important;
+    box-shadow: -6px 0 28px rgba(15, 56, 44, 0.25);
+  }
+
+  .cart-drawer.open {
+    transform: translateX(0) !important;
   }
 
   .announcement-bar {
