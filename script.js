@@ -121,11 +121,11 @@ document.addEventListener('DOMContentLoaded', () => {
         cartDrawerItemCount.style.display = totalCount > 0 ? 'inline-block' : 'none';
       }
 
-      // Subtotal & Total in drawer footer
+      // Subtotal & Total in drawer footer (No actual product pricing displayed)
       const cartSubtotal = document.getElementById('cartSubtotal');
       const cartTotal = document.getElementById('cartTotal');
-      if (cartSubtotal) cartSubtotal.textContent = `₹${totalPrice}`;
-      if (cartTotal) cartTotal.textContent = `₹${totalPrice}`;
+      if (cartSubtotal) cartSubtotal.textContent = `₹0`;
+      if (cartTotal) cartTotal.textContent = `₹0`;
 
       const cartDrawerFooter = document.getElementById('cartDrawerFooter');
       const cartDrawerBody = document.getElementById('cartDrawerBody');
