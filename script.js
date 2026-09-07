@@ -66,6 +66,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
       this.saveCart(cart);
       this.showToast(`Added "${product.name || 'Plant'}" to cart!`);
+
+      // Meta Pixel AddToCart Event
+      if (typeof window.fbq === 'function') {
+        window.fbq('track', 'AddToCart', {
+          content_name: product.name || 'Sri Kadiyam Plant',
+          content_category: product.category || 'Nursery Plant',
+          content_ids: product.id ? [String(product.id)] : [],
+          content_type: 'product',
+          value: (product.price || 0) * (product.quantity || 1),
+          currency: 'INR'
+        });
+      }
     },
 
     updateQuantity(id, change) {
@@ -251,6 +263,19 @@ document.addEventListener('DOMContentLoaded', () => {
       msgLines.push('\nPlease confirm availability and doorstep delivery details.');
 
       const encodedMsg = encodeURIComponent(msgLines.join('\n'));
+
+      // Meta Pixel Lead Event for Cart Drawer WhatsApp Checkout
+      if (typeof window.fbq === 'function') {
+        window.fbq('track', 'Lead', {
+          content_name: cart.map(i => i.name).join(', ') || 'WhatsApp Cart Order',
+          content_ids: cart.map(i => String(i.id)),
+          content_type: 'product',
+          value: CartManager.getTotalPrice(),
+          currency: 'INR',
+          num_items: CartManager.getTotalCount()
+        });
+      }
+
       window.open(`https://wa.me/919052277700?text=${encodedMsg}`, '_blank');
     });
   }
@@ -923,6 +948,14 @@ document.addEventListener('DOMContentLoaded', () => {
       const targetWaNumber = '919052277700';
       const waUrl = `https://wa.me/${targetWaNumber}?text=${encodeURIComponent(waMessageText)}`;
 
+      // Meta Pixel Lead Event for Contact Form Enquiry
+      if (typeof window.fbq === 'function') {
+        window.fbq('track', 'Lead', {
+          content_name: `Contact Form Enquiry: ${requirement || 'General'}`,
+          lead_type: 'Contact Form WhatsApp'
+        });
+      }
+
       // Show success feedback briefly before opening WhatsApp
       if (contactFormAlert) {
         contactFormAlert.textContent = '🌿 Opening WhatsApp with your enquiry...';
@@ -1013,6 +1046,32 @@ document.addEventListener('DOMContentLoaded', () => {
       observer.observe(el);
     });
   }
+
+  // Meta Pixel Lead Event tracking for direct WhatsApp links (e.g. product card WhatsApp order, float button, etc.)
+  document.addEventListener('click', (e) => {
+    const waLink = e.target.closest('a[href*="wa.me"]');
+    if (waLink) {
+      const card = waLink.closest('.catalog-card');
+      let leadData = { lead_type: 'WhatsApp Link Click' };
+      if (card) {
+        const addBtn = card.querySelector('.btn-card-add-cart');
+        const titleEl = card.querySelector('.catalog-card-title');
+        const name = titleEl ? titleEl.textContent.trim() : (addBtn ? addBtn.getAttribute('data-name') : 'Plant');
+        const price = addBtn ? parseInt(addBtn.getAttribute('data-price'), 10) : 0;
+        const id = addBtn ? addBtn.getAttribute('data-id') : '';
+        leadData = {
+          content_name: name || 'Plant WhatsApp Order',
+          content_ids: id ? [String(id)] : [],
+          content_type: 'product',
+          value: price || 0,
+          currency: 'INR'
+        };
+      }
+      if (typeof window.fbq === 'function') {
+        window.fbq('track', 'Lead', leadData);
+      }
+    }
+  });
 });
 
 
